@@ -41,4 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 # keep the template, ignore real secrets
+
 !.env.example
