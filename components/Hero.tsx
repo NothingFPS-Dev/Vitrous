@@ -11,18 +11,22 @@ export default function Hero() {
   useEffect(() => {
     if (!root.current) return;
     const ctx = gsap.context(() => {
-      gsap.fromTo(
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.fromTo(
+        "[data-hero-object]",
+        { opacity: 0, scale: 0.92, filter: "blur(14px)" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.6 }
+      ).fromTo(
         "[data-reveal]",
-        { opacity: 0, y: 26, filter: "blur(10px)" },
+        { opacity: 0, y: 24, filter: "blur(8px)" },
         {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 1.5,
-          ease: "power3.out",
-          stagger: 0.16,
-          delay: 0.25,
-        }
+          duration: 1.3,
+          stagger: 0.13,
+        },
+        "-=1.15"
       );
     }, root);
     return () => ctx.revert();
@@ -46,7 +50,7 @@ export default function Hero() {
 
       {/* centre stage */}
       <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-6">
-        <div data-reveal className="relative">
+        <div data-hero-object className="relative">
           <LiquidBackdrop />
           <HeroEsc />
         </div>
@@ -55,7 +59,7 @@ export default function Hero() {
         <div className="relative z-10 mt-2 flex flex-col items-center text-center">
           <h1
             data-reveal
-            className="display-serif text-[clamp(1.9rem,4.8vw,3rem)] font-medium leading-[1.08] tracking-[-0.015em]"
+            className="display-serif text-[clamp(1.9rem,4.8vw,3rem)] font-medium leading-[1.1] tracking-[-0.015em] text-platinum"
           >
             The escape,{" "}
             <em className="font-normal italic text-silver">immortalised</em> in
@@ -64,17 +68,17 @@ export default function Hero() {
 
           <p
             data-reveal
-            className="mt-4 max-w-md text-[0.92rem] font-light leading-6 text-smoke"
+            className="body-copy mt-4 max-w-md text-[0.95rem]"
           >
             Each keycap is cast, cooled and polished by hand — one at a time,
             never in batches. No two hold the light the same way.
           </p>
 
-          <div data-reveal className="mt-7 flex items-center gap-3">
+          <div data-reveal className="mt-7 flex items-center gap-2">
             <span className="label-caps text-platinum">
               First Edition · Coming Soon
             </span>
-            <span className="label-caps -ml-2 text-platinum">
+            <span className="label-caps text-platinum">
               <span className="dot">.</span>
               <span className="dot">.</span>
               <span className="dot">.</span>
@@ -86,12 +90,9 @@ export default function Hero() {
       {/* foot strip */}
       <footer className="z-10 px-7 pb-7 sm:px-12">
         <div data-reveal className="hairline mb-5" />
-        <div
-          data-reveal
-          className="flex items-center justify-between"
-        >
+        <div data-reveal className="flex items-center justify-between">
           <a
-            href="#waitlist"
+            href="#invitation"
             className="label-caps transition-colors duration-300 hover:text-platinum"
           >
             By private waitlist only ↓

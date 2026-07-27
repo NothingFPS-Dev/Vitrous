@@ -1,6 +1,8 @@
 import Hero from "@/components/Hero";
+import SmoothScroll from "@/components/SmoothScroll";
 import {
-  Manifesto,
+  Invitation,
+  Origin,
   Making,
   Specification,
   Waitlist,
@@ -9,13 +11,18 @@ import {
 
 export default function Home() {
   return (
-    <main>
-      <Hero />
-      <Manifesto />
-      <Making />
-      <Specification />
-      <Waitlist />
-      <SiteFooter />
-    </main>
+    <>
+      <SmoothScroll />
+      <main>
+        <Hero />
+        {/* exclusivity lands immediately after the hero, while attention is high */}
+        <Invitation />
+        <Origin />
+        <Making />
+        <Specification />
+        <Waitlist />
+        <SiteFooter />
+      </main>
+    </>
   );
 }

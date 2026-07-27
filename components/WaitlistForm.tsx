@@ -76,7 +76,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
   }
 
   const field =
-    "peer w-full bg-transparent border-0 border-b border-white/15 px-0 py-3 text-[0.95rem] font-light text-platinum placeholder:text-white/25 focus:border-platinum focus:outline-none transition-colors";
+    "peer w-full bg-transparent border-0 border-b border-white/25 px-0 py-3 text-[1rem] font-normal text-platinum placeholder:text-white/35 focus:border-platinum focus:outline-none transition-colors";
 
   return (
     <div className="relative w-full max-w-xl">
@@ -101,7 +101,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
                 </>
               )}
             </p>
-            <p className="mt-3 max-w-sm text-[0.9rem] font-light leading-6 text-smoke">
+            <p className="body-copy mt-3 max-w-sm text-[0.92rem]">
               {already
                 ? "Your place is held. We will write to you before the release."
                 : "Your place is held. We will write to you once, when the First Edition opens."}
@@ -132,7 +132,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
                     "label-caps !tracking-[0.2em] rounded-[3px] border px-6 py-2.5 transition-all duration-300",
                     active
                       ? "border-platinum bg-platinum text-black"
-                      : "border-white/15 text-silver hover:border-white/40 hover:text-platinum",
+                      : "border-white/25 text-silver hover:border-white/50 hover:text-platinum",
                   ].join(" ")}
                 >
                   {t === "MR" ? "Mr" : "Mrs"}
@@ -179,7 +179,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
         </div>
 
         {message && (
-          <p className="text-[0.85rem] font-light text-[#c98b84]" role="alert">
+          <p className="text-[0.88rem] font-normal text-[#e0968d]" role="alert">
             {message}
           </p>
         )}
@@ -198,7 +198,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
           </span>
         </button>
 
-        <p className="text-[0.75rem] font-light leading-5 text-smoke">
+        <p className="body-copy text-[0.78rem] leading-5">
           One email, once. No newsletters, no forwarding, no third parties.
         </p>
       </form>

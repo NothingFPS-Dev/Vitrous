@@ -3,10 +3,20 @@
 :root {
   /* pure black — must match the hero jpg's background exactly, no seam */
   --ink: #000000;
-  --platinum: #e9e9ec;
-  --silver: #9b9ba3;
-  --smoke: #55555c;
-  --hairline: rgba(233, 233, 236, 0.12);
+
+  /* Text ramp. Contrast against #000 was far too low before; these are
+     tuned so light-weight type stays legible:
+       platinum ~18:1  (headings)
+       silver   ~10:1  (emphasis, italics)
+       smoke    ~7:1   (body copy)
+       label    ~8:1   (small caps — small text needs more) */
+  --platinum: #f2f2f5;
+  --silver: #bcbcc6;
+  --smoke: #9d9da8;
+  --label: #adadb8;
+
+  --hairline: rgba(242, 242, 245, 0.14);
+  --hairline-strong: rgba(242, 242, 245, 0.26);
 }
 
 @theme inline {
@@ -14,6 +24,7 @@
   --color-platinum: var(--platinum);
   --color-silver: var(--silver);
   --color-smoke: var(--smoke);
+  --color-label: var(--label);
   --font-display: var(--font-display);
   --font-body: var(--font-sans-body);
 }
@@ -42,15 +53,31 @@ body {
 @layer base {
   .label-caps {
     font-family: var(--font-sans-body), sans-serif;
-    font-weight: 400;
-    font-size: 0.68rem;
-    letter-spacing: 0.32em;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--silver);
+    color: var(--label);
   }
 
   .display-serif {
     font-family: var(--font-display), serif;
+  }
+
+  /* Cormorant defaults to oldstyle figures, which makes "100" read as "IOO".
+     Force lining figures wherever we show real numbers. */
+  .lining-figures {
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: "lnum" 1, "tnum" 1;
+  }
+
+  /* Body copy: 400 rather than 300. At 300 on black, light strokes
+     disappear into the background regardless of colour. */
+  .body-copy {
+    font-weight: 400;
+    color: var(--smoke);
+    line-height: 1.75;
+    letter-spacing: 0.004em;
   }
 }
 
@@ -68,9 +95,18 @@ body {
 
 /* the animated ellipsis after COMING SOON */
 @keyframes ellipsis-blink {
-  0%, 100% { opacity: 0.15; }
+  0%, 100% { opacity: 0.2; }
   50% { opacity: 1; }
 }
 .dot { animation: ellipsis-blink 2.1s ease-in-out infinite; }
 .dot:nth-child(2) { animation-delay: 0.35s; }
 .dot:nth-child(3) { animation-delay: 0.7s; }
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none; opacity: 0.7; }
+}
