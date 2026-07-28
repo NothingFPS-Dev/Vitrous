@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Reveal from "./Reveal";
 import WaitlistForm from "./WaitlistForm";
+import Engrave from "./Engrave";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -283,6 +284,40 @@ export function Making() {
               <p className="body-copy mt-3 text-[0.94rem]">{s.body}</p>
             </div>
           ))}
+        </div>
+      </Reveal>
+      <Rule />
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 3b. THE REGISTER — describe a piece, the atelier records it         */
+/* ------------------------------------------------------------------ */
+export function Register() {
+  return (
+    <section id="register" className="px-7 sm:px-12">
+      <Reveal className="mx-auto flex max-w-6xl flex-col gap-14 py-24 sm:py-32 md:flex-row md:items-start md:justify-between md:gap-24">
+        <div className="md:max-w-sm">
+          <p data-r className="label-caps mb-6">
+            The Register
+          </p>
+          <h2
+            data-r
+            className="display-serif text-[clamp(1.9rem,4vw,2.7rem)] font-medium leading-[1.12] tracking-[-0.015em] text-platinum"
+          >
+            Tell us what you would have{" "}
+            <em className="font-normal italic text-silver">made</em>.
+          </h2>
+          <p data-r className="body-copy mt-5 max-w-sm text-[0.95rem]">
+            The First Edition is fixed at one hundred escape keys. What follows
+            it is not. Describe a piece and the atelier will record it — every
+            entry is read before the second edition is decided.
+          </p>
+        </div>
+
+        <div data-r className="w-full md:max-w-md">
+          <Engrave />
         </div>
       </Reveal>
       <Rule />

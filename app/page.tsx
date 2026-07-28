@@ -4,6 +4,7 @@ import {
   Invitation,
   Origin,
   Making,
+  Register,
   Specification,
   Waitlist,
   SiteFooter,
@@ -19,6 +20,7 @@ export default function Home() {
         <Invitation />
         <Origin />
         <Making />
+        <Register />
         <Specification />
         <Waitlist />
         <SiteFooter />
