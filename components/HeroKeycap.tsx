@@ -233,13 +233,15 @@ export default function HeroKeycap() {
 
     /* ---------------- the keycap ----------------
        OEM R1-ish: 18mm base tapering to ~14mm, ~10mm tall, dished face. */
-    const capGeo = new RoundedBoxGeometry(1, 0.62, 1, 14, 0.15);
+    const CAP_H = 0.46;
+    const CAP_DISH = 0.042;
+    const capGeo = new RoundedBoxGeometry(1, CAP_H, 1, 14, 0.07);
     {
       const pos = capGeo.attributes.position;
       const v = new THREE.Vector3();
       for (let i = 0; i < pos.count; i++) {
         v.fromBufferAttribute(pos, i);
-        const t = THREE.MathUtils.clamp((v.y + 0.31) / 0.62, 0, 1);
+        const t = THREE.MathUtils.clamp((v.y + CAP_H / 2) / CAP_H, 0, 1);
         // taper toward the top
         const k = 1 - 0.19 * t * t;
         v.x *= k;
@@ -247,7 +249,7 @@ export default function HeroKeycap() {
         // dish the face — concave, deepest at centre
         const topness = THREE.MathUtils.smoothstep(t, 0.72, 1.0);
         const r = Math.min(1, Math.hypot(v.x, v.z) / 0.42);
-        v.y -= topness * 0.055 * (1 - r * r);
+        v.y -= topness * CAP_DISH * (1 - r * r);
         pos.setXYZ(i, v.x, v.y, v.z);
       }
       pos.needsUpdate = true;
@@ -307,13 +309,13 @@ export default function HeroKeycap() {
       })
     );
     legend.rotation.x = -Math.PI / 2;
-    legend.position.y = 0.263;
+    legend.position.y = CAP_H / 2 - CAP_DISH + 0.012;
     legend.renderOrder = 999;
     cap.add(legend);
 
     const capGroup = new THREE.Group();
     capGroup.add(cap);
-    capGroup.scale.setScalar(1.42);
+    capGroup.scale.setScalar(1.55);
     scene.add(capGroup);
 
     /* a couple of direct lights purely for edge definition */
@@ -436,7 +438,7 @@ export default function HeroKeycap() {
       capGroup.rotation.x = spin.x + pointer.y * 0.12 + 0.24;
       capGroup.position.y =
         idleFloat + pressState.y + scrollState.y;
-      capGroup.scale.setScalar(1.42 * scrollState.scale);
+      capGroup.scale.setScalar(1.55 * scrollState.scale);
 
 
       blob.rotation.y = t * 0.045;
