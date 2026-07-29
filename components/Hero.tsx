@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import LiquidBackdrop from "./LiquidBackdrop";
-import HeroEsc from "./HeroEsc";
+import dynamic from "next/dynamic";
+
+// WebGL scene: client-only, and never part of the server render.
+const HeroKeycap = dynamic(() => import("./HeroKeycap"), { ssr: false });
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -51,8 +53,7 @@ export default function Hero() {
       {/* centre stage */}
       <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-6">
         <div data-hero-object className="relative">
-          <LiquidBackdrop />
-          <HeroEsc />
+          <HeroKeycap />
         </div>
 
         {/* copy under the object */}
