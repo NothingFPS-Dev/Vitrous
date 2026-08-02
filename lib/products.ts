@@ -1,9 +1,15 @@
 /* ===========================================================================
    The Vitrous catalogue.
 
-   Every product is Vitrous's own — nothing here references or resells another
-   maker's goods, and every image is rendered in-house from `scenes/[slug]`
-   by scripts/render-products.mjs, so the shop owns its photography outright.
+   Imagery, and why it is what it is:
+   - The flagship ESC is rendered in-house from the same glass kit as the hero
+     (`scenes/[slug]` + scripts/render-products.mjs), so the shop owns it.
+   - Everything else is photographed, sourced from Unsplash under a licence
+     that permits free use without attribution. Credits are kept anyway in
+     `credit` below and surfaced in the product drawer — attribution isn't
+     required, but taking someone's photograph and saying nothing is poor form.
+
+   Nothing here reproduces another retailer's photography or product names.
    =========================================================================== */
 
 export type Scene =
@@ -17,218 +23,226 @@ export interface Product {
   slug: string;
   name: string;
   subtitle: string;
-  /** minor units, GBP-style integer pence-free: 89 = £89 */
+  /** whole pounds — 89 renders as £89 */
   price: number;
-  collection: "Singles" | "Sets" | "Objects";
+  collection: "Keycaps" | "Boards" | "Parts";
   edition: string;
   blurb: string;
   spec: [string, string][];
-  scene: Scene;
-  /** true = orderable now, false = the coming-soon flagship */
+  /** file under /public/products */
+  image: string;
+  /** photo credit, or null when the image is our own render */
+  credit: { source: "Unsplash"; url: string } | null;
+  /** only set for the rendered flagship */
+  scene?: Scene;
   available: boolean;
-  featured?: boolean;
 }
 
 export const PRODUCTS: Product[] = [
   {
     slug: "esc-obsidian",
     name: "ESC — Obsidian",
-    subtitle: "Smoke-cast escape key",
+    subtitle: "Hand-cast glass escape key",
     price: 89,
-    collection: "Singles",
+    collection: "Keycaps",
     edition: "First Edition · 100 pieces",
     blurb:
-      "The piece the workshop was founded to make. Lead-free crystal pulled dark with manganese, so the cap reads almost black until light passes through it and finds the smoke inside.",
+      "The piece the workshop was founded to make, and the only one we cast ourselves. Lead-free crystal pulled dark with manganese, poured into a mould that survives exactly one pour.",
     spec: [
       ["Material", "Lead-free optical crystal"],
       ["Profile", "OEM R1 — escape row"],
       ["Stem", "Cherry MX cross, cut by hand"],
-      ["Mass", "11.4 g"],
+      ["Anneal", "11 days, descending kiln"],
       ["Edition", "One hundred, numbered"],
     ],
+    image: "/products/esc-obsidian.png",
+    credit: null,
     scene: { kind: "single", tint: "obsidian", legend: "esc" },
     available: false,
-    featured: true,
   },
   {
-    slug: "esc-clear",
-    name: "ESC — Clear",
-    subtitle: "Optical clear escape key",
-    price: 89,
-    collection: "Singles",
+    slug: "pastel-archive",
+    name: "Pastel Archive",
+    subtitle: "Full dye-sublimated set, 129 keys",
+    price: 165,
+    collection: "Keycaps",
     edition: "Open edition",
     blurb:
-      "Undyed crystal, polished to nine grades. The most difficult finish we make — clear glass hides nothing, so every inclusion and every stroke of the abrasive has to be answered for.",
+      "Mint, clay pink and powder blue across a full set, with sublegends printed rather than pad-stamped so they will not wear off under a thumb. Cherry profile, thick PBT.",
     spec: [
-      ["Material", "Lead-free optical crystal"],
-      ["Profile", "OEM R1 — escape row"],
-      ["Clarity", "Inclusion-free, graded by eye"],
-      ["Mass", "11.1 g"],
+      ["Contents", "129 keys, Cherry profile"],
+      ["Material", "1.5 mm PBT"],
+      ["Legends", "Dye-sublimated"],
+      ["Layouts", "ANSI · ISO · 65% · 75%"],
       ["Edition", "Open"],
     ],
-    scene: { kind: "single", tint: "clear", legend: "esc" },
+    image: "/products/pastel-archive.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/Z6SXt1v5tP8" },
     available: true,
   },
   {
-    slug: "esc-amber",
-    name: "ESC — Amber",
-    subtitle: "Iron-tinted escape key",
-    price: 95,
-    collection: "Singles",
-    edition: "Open edition",
+    slug: "sunset-gradient",
+    name: "Sunset Gradient",
+    subtitle: "Graded set, peach through rose",
+    price: 178,
+    collection: "Keycaps",
+    edition: "Limited · 300 sets",
     blurb:
-      "Iron oxide folded into the melt gives a warm, resinous body — the colour of very old bottle glass held against a window. Warms further under lamplight.",
+      "A set graded row by row, warmest at the top and cooling as it descends. Matching a gradient across five rows of moulded plastic is difficult enough that we cap the run.",
     spec: [
-      ["Material", "Iron-tinted optical crystal"],
-      ["Profile", "OEM R1 — escape row"],
-      ["Colourant", "Iron oxide, in-melt"],
-      ["Mass", "11.4 g"],
-      ["Edition", "Open"],
+      ["Contents", "126 keys, OEM profile"],
+      ["Material", "PBT, doubleshot"],
+      ["Gradient", "Five-step, row-matched"],
+      ["Layouts", "ANSI · 60% · 65%"],
+      ["Edition", "Three hundred sets"],
     ],
-    scene: { kind: "single", tint: "amber", legend: "esc" },
+    image: "/products/sunset-gradient.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/8ssNFn4VPLg" },
     available: true,
   },
   {
-    slug: "esc-cobalt",
-    name: "ESC — Cobalt",
-    subtitle: "Cobalt-tinted escape key",
-    price: 95,
-    collection: "Singles",
-    edition: "Open edition",
-    blurb:
-      "A single gram of cobalt colours forty kilos of glass. Ours sits deep and cold, dark at the shoulders and clearest across the dished face where the wall runs thin.",
-    spec: [
-      ["Material", "Cobalt-tinted optical crystal"],
-      ["Profile", "OEM R1 — escape row"],
-      ["Colourant", "Cobalt oxide, in-melt"],
-      ["Mass", "11.4 g"],
-      ["Edition", "Open"],
-    ],
-    scene: { kind: "single", tint: "cobalt", legend: "esc" },
-    available: true,
-  },
-  {
-    slug: "esc-rose",
-    name: "ESC — Rose",
-    subtitle: "Selenium-tinted escape key",
-    price: 95,
-    collection: "Singles",
-    edition: "Open edition",
-    blurb:
-      "Selenium pink, the hardest tint to hold steady — a few degrees either side of temperature and the batch turns grey. We lose roughly one pour in four.",
-    spec: [
-      ["Material", "Selenium-tinted crystal"],
-      ["Profile", "OEM R1 — escape row"],
-      ["Colourant", "Selenium, in-melt"],
-      ["Mass", "11.4 g"],
-      ["Edition", "Open"],
-    ],
-    scene: { kind: "single", tint: "rose", legend: "esc" },
-    available: true,
-  },
-  {
-    slug: "cardinal-set",
-    name: "The Cardinal Set",
-    subtitle: "Four glass modifiers",
-    price: 320,
-    collection: "Sets",
-    edition: "Open edition",
-    blurb:
-      "Escape, tab, control and command — the four keys a hand finds without looking. Cast in one session from a single melt so the four match, which a second melt never quite does.",
-    spec: [
-      ["Contents", "esc · tab · ctrl · cmd"],
-      ["Material", "Lead-free optical crystal"],
-      ["Profile", "OEM R1 / R2"],
-      ["Matching", "Single-melt, four caps"],
-      ["Edition", "Open"],
-    ],
-    scene: {
-      kind: "set",
-      tint: "smoke",
-      count: 4,
-      legends: ["esc", "tab", "ctrl", "cmd"],
-    },
-    available: true,
-  },
-  {
-    slug: "monolith-spacebar",
-    name: "Monolith",
-    subtitle: "6.25u glass spacebar",
-    price: 240,
-    collection: "Sets",
-    edition: "Limited · 40 pieces",
-    blurb:
-      "Six and a quarter units of unbroken crystal. Long glass wants to bow as it cools, so each bar spends nineteen days in the kiln rather than eleven — more than half our annealing capacity for one object.",
-    spec: [
-      ["Material", "Lead-free optical crystal"],
-      ["Width", "6.25u"],
-      ["Anneal", "19 days, descending"],
-      ["Mass", "62 g"],
-      ["Edition", "Forty, numbered"],
-    ],
-    scene: { kind: "spacebar", tint: "smoke" },
-    available: true,
-  },
-  {
-    slug: "artisan-001-ember",
-    name: "Artisan Nº 001 — Ember",
-    subtitle: "One-off, colour suspended in-body",
-    price: 180,
-    collection: "Objects",
+    slug: "artisan-tide",
+    name: "Artisan Nº 004 — Tide",
+    subtitle: "Hand-poured resin, one of one",
+    price: 140,
+    collection: "Keycaps",
     edition: "One of one",
     blurb:
-      "A thread of ember-red dropped into clear crystal mid-pour and frozen where it fell. It cannot be repeated — the pattern belongs to the second it was made in.",
+      "Blue resin poured in two stages so the wave sets before the clear coat goes over it. The break never lands twice in the same place, which is the point.",
     spec: [
-      ["Material", "Clear crystal, in-body colour"],
-      ["Profile", "OEM R1"],
+      ["Material", "Two-stage cast resin"],
+      ["Profile", "Fits R1 — escape or 1u"],
+      ["Stem", "Cherry MX cross"],
       ["Pattern", "Unrepeatable"],
-      ["Mass", "11.6 g"],
       ["Edition", "One of one"],
     ],
-    scene: { kind: "artisan", tint: "ember", legend: "esc" },
+    image: "/products/artisan-tide.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/L4Bi4Zfb6Ls" },
     available: true,
   },
   {
-    slug: "the-vitrine",
-    name: "The Vitrine",
-    subtitle: "Walnut display plinth",
-    price: 140,
-    collection: "Objects",
+    slug: "lavender-field",
+    name: "Lavender Field",
+    subtitle: "Muted violet set, blank modifiers",
+    price: 152,
+    collection: "Keycaps",
     edition: "Open edition",
     blurb:
-      "Oiled walnut, milled with a single seat. Made because a glass keycap spends most of its life not being typed on, and deserves somewhere better than a drawer.",
+      "A quiet violet that reads grey in daylight and purple under lamplight. Modifiers ship blank — the set is meant to be looked at rather than read.",
     spec: [
-      ["Material", "Oiled English walnut"],
-      ["Seat", "One cap, 1u"],
-      ["Finish", "Hand-rubbed oil"],
-      ["Footprint", "70 × 70 mm"],
+      ["Contents", "117 keys, blank mods"],
+      ["Material", "PBT"],
+      ["Profile", "Cherry"],
+      ["Layouts", "ANSI · 65% · TKL"],
       ["Edition", "Open"],
     ],
-    scene: { kind: "plinth", tint: "clear", legend: "esc" },
+    image: "/products/lavender-field.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/PT_9ux0j-x4" },
     available: true,
   },
   {
-    slug: "vitrum-full-set",
-    name: "Vitrum — The Full Set",
-    subtitle: "Twelve glass caps",
-    price: 780,
-    collection: "Sets",
-    edition: "Limited · 25 sets",
+    slug: "chroma-retro",
+    name: "Chroma Retro",
+    subtitle: "Full colour set, cream and primary",
+    price: 195,
+    collection: "Keycaps",
+    edition: "Limited · 200 sets",
     blurb:
-      "Twelve caps, one melt, one hand. The largest run we can hold to a single tone; beyond twelve the glass shifts and the set stops reading as a set.",
+      "Cream body, primary accents, and a colour order borrowed from machines that stopped being made before most of us could type. Loud on purpose.",
     spec: [
-      ["Contents", "12 caps, mixed profile"],
-      ["Material", "Lead-free optical crystal"],
-      ["Matching", "Single-melt across twelve"],
-      ["Anneal", "11 days, each"],
-      ["Edition", "Twenty-five sets"],
+      ["Contents", "132 keys, SA profile"],
+      ["Material", "Doubleshot ABS"],
+      ["Accents", "Nine colourways in-set"],
+      ["Layouts", "ANSI · full-size · TKL"],
+      ["Edition", "Two hundred sets"],
     ],
-    scene: { kind: "set", tint: "clear", count: 12 },
+    image: "/products/chroma-retro.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/PTTlyA62exo" },
+    available: true,
+  },
+  {
+    slug: "nightshift",
+    name: "Nightshift",
+    subtitle: "Shine-through set, cool white",
+    price: 128,
+    collection: "Keycaps",
+    edition: "Open edition",
+    blurb:
+      "Opaque black with a translucent legend layer, so the board stays dark until it is lit. Built for people who work when everyone else has stopped.",
+    spec: [
+      ["Contents", "104 keys"],
+      ["Material", "Doubleshot PBT"],
+      ["Legends", "Shine-through"],
+      ["Profile", "OEM"],
+      ["Edition", "Open"],
+    ],
+    image: "/products/nightshift.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/dbgbyzFR8uI" },
+    available: true,
+  },
+  {
+    slug: "slate-84",
+    name: "Slate 84",
+    subtitle: "75% barebones, anodised aluminium",
+    price: 320,
+    collection: "Boards",
+    edition: "Open edition",
+    blurb:
+      "A milled aluminium 75% with a gasket mount and no switches or caps — the base you build the rest of this catalogue onto. Hot-swap, so nothing needs soldering.",
+    spec: [
+      ["Layout", "75% · 84 keys"],
+      ["Case", "CNC anodised aluminium"],
+      ["Mount", "Gasket, poron"],
+      ["Sockets", "Hot-swap, 3 and 5-pin"],
+      ["Connection", "USB-C, detachable"],
+    ],
+    image: "/products/slate-84.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/cVUPic1cbd4" },
+    available: true,
+  },
+  {
+    slug: "tactile-switches",
+    name: "Tactile 67g",
+    subtitle: "Switch set, 70 pieces",
+    price: 62,
+    collection: "Parts",
+    edition: "Open edition",
+    blurb:
+      "A rounded tactile bump early in the travel, factory-lubed and bagged in seventies so a 65% board is covered with spares. No spring ping worth complaining about.",
+    spec: [
+      ["Quantity", "70 switches"],
+      ["Type", "Tactile"],
+      ["Spring", "67 g bottom-out"],
+      ["Lubrication", "Factory, light"],
+      ["Pins", "5-pin, PCB mount"],
+    ],
+    image: "/products/tactile-switches.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/ZByWaPXD2fU" },
+    available: true,
+  },
+  {
+    slug: "service-kit",
+    name: "The Service Kit",
+    subtitle: "Puller, brush, lube and spares",
+    price: 48,
+    collection: "Parts",
+    edition: "Open edition",
+    blurb:
+      "A wire puller that will not scar an ABS cap, a switch puller, a fine brush, a pot of lubricant and a strip of spare stabiliser inserts. Everything a board needs and nothing it does not.",
+    spec: [
+      ["Contents", "5 pieces"],
+      ["Keycap puller", "Coated wire"],
+      ["Switch puller", "Steel"],
+      ["Lubricant", "10 g, PTFE-based"],
+      ["Spares", "Stabiliser inserts ×4"],
+    ],
+    image: "/products/service-kit.jpg",
+    credit: { source: "Unsplash", url: "https://unsplash.com/photos/c4a_0kycTUE" },
     available: true,
   },
 ];
 
-export const COLLECTIONS = ["All", "Singles", "Sets", "Objects"] as const;
+export const COLLECTIONS = ["All", "Keycaps", "Boards", "Parts"] as const;
 export type Collection = (typeof COLLECTIONS)[number];
 
 export const bySlug = (slug: string) => PRODUCTS.find((p) => p.slug === slug);
@@ -240,4 +254,5 @@ export const formatPrice = (n: number) =>
     minimumFractionDigits: 0,
   }).format(n);
 
-export const productImage = (slug: string) => `/products/${slug}.png`;
+export const productImage = (slug: string) =>
+  bySlug(slug)?.image ?? `/products/${slug}.png`;

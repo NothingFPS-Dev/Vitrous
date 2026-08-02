@@ -16,13 +16,27 @@ import path from "node:path";
 const BASE = process.env.RENDER_BASE ?? "http://localhost:3000";
 const OUT_DIR = path.resolve("public/products");
 
-// read slugs straight out of the catalogue so the two can't drift
+/*
+ * Read slugs from the catalogue so the two can't drift. Only entries that
+ * declare a `scene` are rendered — the rest of the shop is photographed.
+ * Splitting on the slug key gives one chunk per product, which is enough
+ * structure to ask "does this one have a scene?" without parsing TypeScript.
+ */
 const src = await readFile("lib/products.ts", "utf8");
-const slugs = [...src.matchAll(/slug:\s*"([a-z0-9-]+)"/g)].map((m) => m[1]);
+const chunks = src.split(/slug:\s*"/).slice(1);
+const slugs = chunks
+  .map((chunk) => {
+    const slug = chunk.slice(0, chunk.indexOf('"'));
+    const body = chunk.slice(0, chunk.indexOf("\n  },"));
+    return body.includes("scene:") ? slug : null;
+  })
+  .filter(Boolean);
+
 if (!slugs.length) {
-  console.error("No product slugs found in lib/products.ts");
+  console.error("No renderable products found in lib/products.ts");
   process.exit(1);
 }
+console.log(`Renderable products: ${slugs.join(", ")}`);
 
 await mkdir(OUT_DIR, { recursive: true });
 

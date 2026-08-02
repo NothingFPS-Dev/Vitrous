@@ -12,7 +12,8 @@ import { PRODUCTS, bySlug } from "@/lib/products";
 export const metadata = { robots: { index: false, follow: false } };
 
 export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
+  // only products with a scene are renderable
+  return PRODUCTS.filter((p) => p.scene).map((p) => ({ slug: p.slug }));
 }
 
 export default async function ScenePage({
@@ -22,7 +23,7 @@ export default async function ScenePage({
 }) {
   const { slug } = await params;
   const product = bySlug(slug);
-  if (!product) notFound();
+  if (!product?.scene) notFound();
 
   return (
     <>

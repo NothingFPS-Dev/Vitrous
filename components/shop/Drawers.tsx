@@ -287,6 +287,27 @@ export function ProductDrawer() {
                   </div>
                 ))}
               </dl>
+
+              {/* The Unsplash licence doesn't require attribution — we credit
+                  anyway, because using someone's photograph silently is poor
+                  form. Our own renders carry no credit. */}
+              <p data-sheet-item className="label-caps mt-6 !text-[0.6rem]">
+                {viewing.credit ? (
+                  <>
+                    Photography via{" "}
+                    <a
+                      href={viewing.credit.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="link-underline"
+                    >
+                      {viewing.credit.source}
+                    </a>
+                  </>
+                ) : (
+                  "Rendered in-house"
+                )}
+              </p>
             </div>
           </div>
 
