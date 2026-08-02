@@ -2,9 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  TINTS,
+  makeGlassMaterial,
+  makeKeycapGeometry,
+  makeLegend,
+  makeStudioEnv,
+} from "@/lib/glass";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -82,8 +88,9 @@ export default function HeroKeycap() {
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(el.clientWidth, el.clientHeight);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    // No tone mapping: the backdrop must render as the *exact* page colour
+    // or the canvas shows as a rectangle against the parchment.
+    renderer.toneMapping = THREE.NoToneMapping;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     // transmission buffer at half res — invisible here, much cheaper
     renderer.transmissionResolutionScale = 0.5;
@@ -99,42 +106,10 @@ export default function HeroKeycap() {
     camera.position.set(0, 0.55, 4.9);
     camera.lookAt(0, -0.05, 0);
 
-    /* ---------------- studio environment ----------------
-       Emissive panels on black. Glass has almost no colour of its own — what
-       you read as "glass" is entirely the shape of the highlights it catches,
-       so the env matters more than the lights. */
-    const envScene = new THREE.Scene();
-    const panel = (
-      w: number,
-      h: number,
-      pos: [number, number, number],
-      rot: [number, number, number],
-      intensity: number
-    ) => {
-      const m = new THREE.Mesh(
-        new THREE.PlaneGeometry(w, h),
-        new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intensity, intensity, intensity),
-        })
-      );
-      m.position.set(...pos);
-      m.rotation.set(...rot);
-      envScene.add(m);
-    };
-    // Narrow, bright strips rather than broad panels: glass reads as glass
-    // when it catches distinct highlights, not an even wash.
-    panel(1.5, 7.5, [4.0, 3.4, 2.4], [0, -0.85, 0.25], 6.0); // key strip
-    panel(0.8, 5.5, [-3.6, 2.2, -1.8], [0, 2.3, 0.2], 3.6); // counter-rim
-    panel(1.0, 6, [-4.4, 1.0, 1.8], [0, 1.15, -0.2], 2.2); // fill strip
-    panel(8, 1.0, [0, 3.4, -5.5], [0, 0, 0], 0.7); // top rim
-    // low front strip — this is what lights the bottom bevel and gives glass
-    // its characteristic bright underline
-    panel(5, 0.9, [0, -2.6, 3.2], [-0.5, 0, 0], 2.8);
-    panel(6, 4, [0, -4.2, 1.5], [Math.PI / 2, 0, 0], 0.12); // bounce
-
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const envRT = pmrem.fromScene(envScene, 0.02);
-    scene.environment = envRT.texture;
+    /* Warm studio, shared with the product renderer so the hero cap and the
+       catalogue shots are lit identically. */
+    const env = makeStudioEnv(renderer, { warm: true });
+    scene.environment = env.texture;
 
     /* ---------------- backdrop glow ----------------
        Glass on pure black is invisible: with nothing luminous behind it there
@@ -147,11 +122,11 @@ export default function HeroKeycap() {
       const grad = g.createRadialGradient(256, 256, 0, 256, 256, 256);
       // Must reach pure black well inside the plane's own edges, otherwise
        // the quad's rectangle is visible against the page.
-      grad.addColorStop(0, "#aeb7ca");
-      grad.addColorStop(0.16, "#3d4551");
-      grad.addColorStop(0.34, "#141821");
-      grad.addColorStop(0.5, "#000000");
-      grad.addColorStop(1, "#000000");
+      grad.addColorStop(0, "#fbf7ef");
+      grad.addColorStop(0.22, "#f6efe4");
+      grad.addColorStop(0.5, "#f2ebdf");
+      grad.addColorStop(0.78, "#f0e8db");
+      grad.addColorStop(1, "#f0e8db");
       g.fillStyle = grad;
       g.fillRect(0, 0, 512, 512);
       const t = new THREE.CanvasTexture(c);
@@ -170,17 +145,17 @@ export default function HeroKeycap() {
     const blobMat = new THREE.MeshPhysicalMaterial({
       // Near-black liquid glass: it must give the keycap something to catch
       // and refract without ever competing with it for attention.
-      color: 0x05070b,
+      color: 0x6d5340,
       roughness: 0.055,
       metalness: 0.3,
       clearcoat: 1,
       clearcoatRoughness: 0.06,
       // a whisper of iridescence only — full strength threw green into an
       // otherwise monochrome scene
-      iridescence: 0.18,
+      iridescence: 0.25,
       iridescenceIOR: 1.25,
       iridescenceThicknessRange: [260, 620],
-      envMapIntensity: 1.5,
+      envMapIntensity: 1.15,
       // Deliberately opaque: three.js renders only opaque objects into the
       // transmission backdrop. Marking this transparent leaves the glass's
       // transmission sampler unbound — it then reads white and the keycap
@@ -235,82 +210,16 @@ export default function HeroKeycap() {
        OEM R1-ish: 18mm base tapering to ~14mm, ~10mm tall, dished face. */
     const CAP_H = 0.46;
     const CAP_DISH = 0.042;
-    const capGeo = new RoundedBoxGeometry(1, CAP_H, 1, 14, 0.07);
-    {
-      const pos = capGeo.attributes.position;
-      const v = new THREE.Vector3();
-      for (let i = 0; i < pos.count; i++) {
-        v.fromBufferAttribute(pos, i);
-        const t = THREE.MathUtils.clamp((v.y + CAP_H / 2) / CAP_H, 0, 1);
-        // taper toward the top
-        const k = 1 - 0.19 * t * t;
-        v.x *= k;
-        v.z *= k;
-        // dish the face — concave, deepest at centre
-        const topness = THREE.MathUtils.smoothstep(t, 0.72, 1.0);
-        const r = Math.min(1, Math.hypot(v.x, v.z) / 0.42);
-        v.y -= topness * CAP_DISH * (1 - r * r);
-        pos.setXYZ(i, v.x, v.y, v.z);
-      }
-      pos.needsUpdate = true;
-      capGeo.computeVertexNormals();
-    }
-
-    const glass = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      metalness: 0,
-      roughness: 0.045,
-      transmission: 1,
-      thickness: 0.45,
-      ior: 1.52,
-      // splits the refraction into faint colour at the edges — the single
-      // detail that most separates "glass" from "clear plastic"
-      dispersion: 1.8,
-      // no clearcoat: glass is not a lacquered surface, and the extra
-      // specular layer was washing the whole cap milky white
-      clearcoat: 0,
-      envMapIntensity: 1.7,
-      specularIntensity: 1,
-      attenuationColor: new THREE.Color(0xdfe6ef),
-      attenuationDistance: 6.0,
+    const capGeo = makeKeycapGeometry(1);
+    const glass = makeGlassMaterial({
+      attenuation: 0x232830,
+      attenuationDistance: 0.42,
+      color: 0xf0f0f2,
     });
 
     const cap = new THREE.Mesh(capGeo, glass);
 
-    /* legend: sub-surface, sitting just under the dished face */
-    const legendTex = (() => {
-      const c = document.createElement("canvas");
-      c.width = c.height = 512;
-      const g = c.getContext("2d")!;
-      g.clearRect(0, 0, 512, 512);
-      g.fillStyle = "#ffffff";
-      g.font = "500 150px 'Manrope', system-ui, sans-serif";
-      g.textAlign = "center";
-      g.textBaseline = "middle";
-      g.fillText("esc", 246, 262);
-      g.beginPath();
-      g.arc(372, 292, 15, 0, Math.PI * 2);
-      g.fill();
-      const t = new THREE.CanvasTexture(c);
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = 8;
-      return t;
-    })();
-
-    const legend = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.52, 0.52),
-      new THREE.MeshBasicMaterial({
-        map: legendTex,
-        transparent: true,
-        opacity: 0.95,
-        depthWrite: false,
-        depthTest: false,
-        side: THREE.FrontSide,
-      })
-    );
-    legend.rotation.x = -Math.PI / 2;
-    legend.position.y = CAP_H / 2 - CAP_DISH + 0.012;
-    legend.renderOrder = 999;
+    const legend = makeLegend("esc");
     cap.add(legend);
 
     const capGroup = new THREE.Group();
@@ -322,7 +231,7 @@ export default function HeroKeycap() {
     const key = new THREE.DirectionalLight(0xffffff, 1.6);
     key.position.set(3, 4, 3);
     scene.add(key);
-    const rim = new THREE.DirectionalLight(0xbcd4ff, 1.1);
+    const rim = new THREE.DirectionalLight(0xffd9ac, 1.1);
     rim.position.set(-3, 1.5, -2.5);
     scene.add(rim);
 
@@ -479,14 +388,12 @@ export default function HeroKeycap() {
       glass.dispose();
       blob.geometry.dispose();
       blobMat.dispose();
-      legendTex.dispose();
       legend.geometry.dispose();
       (legend.material as THREE.Material).dispose();
       glowTex.dispose();
       glow.geometry.dispose();
       (glow.material as THREE.Material).dispose();
-      envRT.dispose();
-      pmrem.dispose();
+      env.dispose();
       renderer.dispose();
       if (dom.parentNode) dom.parentNode.removeChild(dom);
     };

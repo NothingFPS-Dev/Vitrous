@@ -71,12 +71,12 @@ export default function Engrave() {
             maxLength={240}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="a frozen wave at midnight…"
-            className="w-full border-0 border-b border-white/25 bg-transparent px-0 py-3 text-[1rem] font-normal text-platinum transition-colors placeholder:text-white/35 focus:border-platinum focus:outline-none"
+            className="w-full border-0 border-b border-[var(--rule-strong)] bg-transparent px-0 py-3 text-[1rem] font-normal text-text transition-colors placeholder:text-text-mute focus:border-espresso focus:outline-none"
           />
           <button
             type="submit"
             disabled={status === "working" || prompt.trim().length < 3}
-            className="shrink-0 rounded-[3px] border border-platinum bg-platinum px-7 py-3 text-black transition-all duration-300 hover:bg-transparent hover:text-platinum disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn btn-solid shrink-0"
           >
             <span className="label-caps text-current !tracking-[0.22em]">
               {status === "working" ? "Recording…" : "Record it"}
@@ -93,7 +93,7 @@ export default function Engrave() {
               key={s}
               type="button"
               onClick={() => setPrompt(s)}
-              className="rounded-[3px] border border-white/15 px-3 py-1.5 text-[0.78rem] font-normal text-smoke transition-colors duration-300 hover:border-white/40 hover:text-platinum"
+              className="rounded-[3px] border border-[var(--rule)] px-3 py-1.5 text-[0.78rem] font-normal text-text-soft transition-colors duration-300 hover:border-[var(--rule-strong)] hover:text-text"
             >
               {s}
             </button>
@@ -102,17 +102,17 @@ export default function Engrave() {
       )}
 
       {message && (
-        <p className="mt-5 text-[0.88rem] font-normal text-[#e0968d]" role="alert">
+        <p className="mt-5 text-[0.88rem] font-normal text-[#9c3b28]" role="alert">
           {message}
         </p>
       )}
 
       {status === "done" && concept && (
-        <div className="mt-8 border-l border-white/25 pl-6" aria-live="polite">
+        <div className="mt-8 border-l border-[var(--rule-strong)] pl-6" aria-live="polite">
           <p className="label-caps mb-3">Entered in the register</p>
           <p
             ref={out}
-            className="display-serif text-[clamp(1.15rem,2.4vw,1.5rem)] font-normal leading-[1.5] text-platinum"
+            className="display-serif text-[clamp(1.15rem,2.4vw,1.5rem)] font-normal leading-[1.5] text-text"
           >
             {concept}
           </p>
@@ -123,7 +123,7 @@ export default function Engrave() {
               setConcept("");
               setPrompt("");
             }}
-            className="label-caps mt-5 transition-colors duration-300 hover:text-platinum"
+            className="label-caps mt-5 transition-colors duration-300 hover:text-text"
           >
             Describe another →
           </button>

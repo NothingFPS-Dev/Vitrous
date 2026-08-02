@@ -10,7 +10,7 @@ import Engrave from "./Engrave";
 gsap.registerPlugin(ScrollTrigger);
 
 function Rule() {
-  return <div className="hairline" />;
+  return <div className="rule" />;
 }
 
 /* ------------------------------------------------------------------ */
@@ -57,11 +57,11 @@ export function Invitation() {
 
         <h2
           data-r
-          className="display-serif max-w-3xl text-[clamp(2rem,5vw,3.4rem)] font-medium leading-[1.08] tracking-[-0.02em] text-platinum"
+          className="display-serif max-w-3xl text-[clamp(2rem,5vw,3.4rem)] font-medium leading-[1.08] tracking-[-0.02em] text-text"
         >
           One hundred will exist.
           <br />
-          <em className="font-normal italic text-silver">
+          <em className="font-normal italic text-sienna">
             Then the mould is broken.
           </em>
         </h2>
@@ -79,7 +79,7 @@ export function Invitation() {
             <div key={label} data-r className="flex flex-col">
               <span
                 data-count={n}
-                className="display-serif lining-figures text-[clamp(2.8rem,6vw,4.2rem)] font-medium leading-none text-platinum"
+                className="display-serif lining-figures text-[clamp(2.8rem,6vw,4.2rem)] font-medium leading-none text-text"
               >
                 {n}
               </span>
@@ -93,11 +93,9 @@ export function Invitation() {
         <div data-r className="mt-16">
           <a
             href="#waitlist"
-            className="group inline-flex items-center gap-3 rounded-[3px] border border-platinum bg-platinum px-8 py-4 text-black transition-all duration-300 hover:bg-transparent hover:text-platinum"
+            className="btn btn-solid group"
           >
-            <span className="label-caps text-current !tracking-[0.24em]">
-              Request an invitation
-            </span>
+            <span className="text-current">Request an invitation</span>
             <span className="transition-transform duration-300 group-hover:translate-x-1">
               →
             </span>
@@ -198,10 +196,10 @@ export function Origin() {
           </p>
           <h2
             data-r
-            className="display-serif max-w-2xl text-[clamp(1.9rem,4.4vw,2.9rem)] font-medium leading-[1.14] tracking-[-0.015em] text-platinum"
+            className="display-serif max-w-2xl text-[clamp(1.9rem,4.4vw,2.9rem)] font-medium leading-[1.14] tracking-[-0.015em] text-text"
           >
             Glass is the oldest thing we make that still{" "}
-            <em className="font-normal italic text-silver">remembers light</em>.
+            <em className="font-normal italic text-sienna">remembers light</em>.
           </h2>
         </Reveal>
 
@@ -214,7 +212,7 @@ export function Origin() {
             >
               <div
                 data-numeral
-                className="display-serif select-none text-[3.4rem] leading-none text-platinum/25 sm:text-[4.6rem]"
+                className="display-serif select-none text-[3.4rem] leading-none text-text/25 sm:text-[4.6rem]"
                 aria-hidden
               >
                 {c.numeral}
@@ -222,13 +220,13 @@ export function Origin() {
               <div className="max-w-2xl">
                 <h3
                   data-line
-                  className="display-serif text-[1.6rem] font-medium text-platinum sm:text-[2rem]"
+                  className="display-serif text-[1.6rem] font-medium text-text sm:text-[2rem]"
                 >
                   {c.title}
                 </h3>
                 <p data-line className="body-copy mt-4 text-[1rem] sm:text-[1.05rem]">
                   {c.lead && (
-                    <em className="not-italic font-medium text-silver">
+                    <em className="not-italic font-medium text-sienna">
                       <i className="italic">{c.lead}</i>
                     </em>
                   )}
@@ -267,7 +265,7 @@ const STEPS = [
 
 export function Making() {
   return (
-    <section className="px-7 sm:px-12">
+    <section id="making" className="px-7 sm:px-12">
       <Reveal className="mx-auto max-w-6xl py-24 sm:py-32">
         <p data-r className="label-caps mb-14">
           The Making
@@ -275,10 +273,10 @@ export function Making() {
         <div className="grid gap-14 md:grid-cols-3 md:gap-10">
           {STEPS.map((s) => (
             <div key={s.n} data-r className="flex flex-col">
-              <span className="label-caps !tracking-[0.24em] text-platinum">
+              <span className="label-caps !tracking-[0.24em] text-text">
                 {s.n}
               </span>
-              <h3 className="display-serif mt-4 text-[1.5rem] font-medium text-platinum">
+              <h3 className="display-serif mt-4 text-[1.5rem] font-medium text-text">
                 {s.title}
               </h3>
               <p className="body-copy mt-3 text-[0.94rem]">{s.body}</p>
@@ -304,10 +302,10 @@ export function Register() {
           </p>
           <h2
             data-r
-            className="display-serif text-[clamp(1.9rem,4vw,2.7rem)] font-medium leading-[1.12] tracking-[-0.015em] text-platinum"
+            className="display-serif text-[clamp(1.9rem,4vw,2.7rem)] font-medium leading-[1.12] tracking-[-0.015em] text-text"
           >
             Tell us what you would have{" "}
-            <em className="font-normal italic text-silver">made</em>.
+            <em className="font-normal italic text-sienna">made</em>.
           </h2>
           <p data-r className="body-copy mt-5 max-w-sm text-[0.95rem]">
             The First Edition is fixed at one hundred escape keys. What follows
@@ -326,48 +324,6 @@ export function Register() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 4. SPECIFICATION                                                    */
-/* ------------------------------------------------------------------ */
-const SPEC: [string, string][] = [
-  ["Material", "Lead-free optical crystal"],
-  ["Profile", "OEM R1 — escape row"],
-  ["Stem", "Cherry MX cross, cut by hand"],
-  ["Mass", "11.4 g"],
-  ["Legend", "Sub-surface laser, 0.2 mm depth"],
-  ["Edition", "One hundred pieces, numbered"],
-];
-
-export function Specification() {
-  return (
-    <section className="px-7 py-24 sm:px-12 sm:py-32">
-      <Reveal className="mx-auto max-w-3xl" stagger={0.06}>
-        <p data-r className="label-caps mb-12">
-          Specification
-        </p>
-        <dl className="flex flex-col">
-          {SPEC.map(([k, v]) => (
-            <div
-              key={k}
-              data-r
-              className="group flex items-baseline justify-between gap-6 border-b border-white/12 py-5 transition-colors duration-300 hover:border-white/30"
-            >
-              <dt className="label-caps !tracking-[0.18em]">{k}</dt>
-              <dd className="text-right text-[0.98rem] font-normal text-platinum">
-                {v}
-              </dd>
-            </div>
-          ))}
-        </dl>
-        <p data-r className="body-copy mt-10 text-[0.85rem]">
-          Specifications are provisional until the edition is sealed. Price will
-          be disclosed to the list before it is published.
-        </p>
-      </Reveal>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* 5. WAITLIST                                                         */
 /* ------------------------------------------------------------------ */
 export function Waitlist() {
@@ -381,11 +337,11 @@ export function Waitlist() {
           </p>
           <h2
             data-r
-            className="display-serif text-[clamp(1.9rem,4vw,2.7rem)] font-medium leading-[1.12] tracking-[-0.015em] text-platinum"
+            className="display-serif text-[clamp(1.9rem,4vw,2.7rem)] font-medium leading-[1.12] tracking-[-0.015em] text-text"
           >
             One hundred pieces.
             <br />
-            <em className="font-normal italic text-silver">By invitation.</em>
+            <em className="font-normal italic text-sienna">By invitation.</em>
           </h2>
           <p data-r className="body-copy mt-5 max-w-sm text-[0.95rem]">
             The First Edition will not be sold publicly. Those on the list are
@@ -409,7 +365,7 @@ export function SiteFooter() {
     <footer className="px-7 sm:px-12">
       <Rule />
       <div className="mx-auto flex max-w-6xl flex-col gap-4 py-10 sm:flex-row sm:items-center sm:justify-between">
-        <span className="label-caps !tracking-[0.42em] text-platinum">
+        <span className="label-caps !tracking-[0.42em] text-text">
           Vitrous
         </span>
         <span className="label-caps">

@@ -1,99 +1,206 @@
 @import "tailwindcss";
 
+/* ===========================================================================
+   VITROUS — warm tan / brown system.
+   Deliberately not gold: the accent is a burnt sienna (clay fired, not metal),
+   and the neutrals run through sand, clay and umber to a warm espresso.
+   =========================================================================== */
 :root {
-  /* pure black — must match the hero jpg's background exactly, no seam */
-  --ink: #000000;
+  /* surfaces, light → dark */
+  --parchment: #f6f1e9;
+  --sand: #ebe2d5;
+  --linen: #ded2c1;
+  --clay: #c9b299;
+  --umber: #7a6350;
+  --bark: #4a3b2e;
+  --espresso: #2b211a;
+  --ink: #1a130e;
 
-  /* Text ramp. Contrast against #000 was far too low before; these are
-     tuned so light-weight type stays legible:
-       platinum ~18:1  (headings)
-       silver   ~10:1  (emphasis, italics)
-       smoke    ~7:1   (body copy)
-       label    ~8:1   (small caps — small text needs more) */
-  --platinum: #f2f2f5;
-  --silver: #bcbcc6;
-  --smoke: #9d9da8;
-  --label: #adadb8;
+  /* ink on light surfaces */
+  --text: #241b14;
+  --text-soft: #55442f;
+  --text-mute: #7b6650;
 
-  --hairline: rgba(242, 242, 245, 0.14);
-  --hairline-strong: rgba(242, 242, 245, 0.26);
+  /* ink on dark surfaces */
+  --text-inv: #f3ece2;
+  --text-inv-soft: #cbbba6;
+  --text-inv-mute: #a18d76;
+
+  /* accent — fired clay, no metallic gold anywhere */
+  --sienna: #a2542c;
+  --sienna-deep: #7d3f20;
+  --sienna-soft: #c98a5f;
+
+  --rule: rgba(36, 27, 20, 0.14);
+  --rule-strong: rgba(36, 27, 20, 0.28);
+  --rule-inv: rgba(243, 236, 226, 0.16);
+
+  --shadow-plate: 0 1px 2px rgba(36, 27, 20, 0.06),
+    0 8px 24px -12px rgba(36, 27, 20, 0.22);
+  --shadow-lift: 0 2px 6px rgba(36, 27, 20, 0.08),
+    0 24px 48px -20px rgba(36, 27, 20, 0.34);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
+  --color-parchment: var(--parchment);
+  --color-sand: var(--sand);
+  --color-linen: var(--linen);
+  --color-clay: var(--clay);
+  --color-umber: var(--umber);
+  --color-bark: var(--bark);
+  --color-espresso: var(--espresso);
   --color-ink: var(--ink);
-  --color-platinum: var(--platinum);
-  --color-silver: var(--silver);
-  --color-smoke: var(--smoke);
-  --color-label: var(--label);
+  --color-sienna: var(--sienna);
+  --color-sienna-deep: var(--sienna-deep);
+  --color-sienna-soft: var(--sienna-soft);
+  --color-text: var(--text);
+  --color-text-soft: var(--text-soft);
+  --color-text-mute: var(--text-mute);
+  --color-text-inv: var(--text-inv);
+  --color-text-inv-soft: var(--text-inv-soft);
+  --color-text-inv-mute: var(--text-inv-mute);
   --font-display: var(--font-display);
   --font-body: var(--font-sans-body);
 }
 
 html {
-  background: var(--ink);
+  background: var(--parchment);
 }
 
 body {
-  background: var(--ink);
-  color: var(--platinum);
+  background: var(--parchment);
+  color: var(--text);
   font-family: var(--font-sans-body), system-ui, sans-serif;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--platinum);
-  color: var(--ink);
+  background: var(--sienna);
+  color: var(--parchment);
 }
 
-/*
- * Declared in @layer base so Tailwind's utility layer always wins — otherwise
- * `text-platinum` / `text-black` lose to these rules on equal specificity and
- * the chips/logo render the wrong colour.
- */
 @layer base {
   .label-caps {
     font-family: var(--font-sans-body), sans-serif;
     font-weight: 500;
     font-size: 0.7rem;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
-    color: var(--label);
+    color: var(--text-mute);
   }
 
   .display-serif {
     font-family: var(--font-display), serif;
   }
 
-  /* Cormorant defaults to oldstyle figures, which makes "100" read as "IOO".
-     Force lining figures wherever we show real numbers. */
+  /* Cormorant defaults to oldstyle figures, which makes "100" read "IOO" */
   .lining-figures {
     font-variant-numeric: lining-nums tabular-nums;
     font-feature-settings: "lnum" 1, "tnum" 1;
   }
 
-  /* Body copy: 400 rather than 300. At 300 on black, light strokes
-     disappear into the background regardless of colour. */
   .body-copy {
     font-weight: 400;
-    color: var(--smoke);
-    line-height: 1.75;
+    color: var(--text-soft);
+    line-height: 1.72;
     letter-spacing: 0.004em;
   }
 }
 
-/* hairline rules used as section furniture */
-.hairline {
+@layer components {
+/* ---------- furniture ---------- */
+.rule {
   height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--hairline) 20%,
-    var(--hairline) 80%,
-    transparent
-  );
+  background: var(--rule);
+}
+.rule-inv {
+  height: 1px;
+  background: var(--rule-inv);
 }
 
-/* the animated ellipsis after COMING SOON */
+/* woven paper tooth — keeps large tan fields from looking like flat fill */
+.tooth {
+  position: relative;
+}
+.tooth::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(36, 27, 20, 0.055) 1px,
+      transparent 0
+    );
+  background-size: 4px 4px;
+}
+
+/* ---------- controls ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-radius: 2px;
+  padding: 0.95rem 1.9rem;
+  font-family: var(--font-sans-body), sans-serif;
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease),
+    border-color 0.35s var(--ease), transform 0.35s var(--ease);
+  cursor: pointer;
+}
+.btn-solid {
+  background: var(--espresso);
+  color: var(--text-inv);
+  border: 1px solid var(--espresso);
+}
+.btn-solid:hover {
+  background: var(--sienna);
+  border-color: var(--sienna);
+  transform: translateY(-1px);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--rule-strong);
+}
+.btn-outline:hover {
+  border-color: var(--espresso);
+  background: var(--espresso);
+  color: var(--text-inv);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* underline that draws in from the left */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 0;
+  background: currentColor;
+  transition: width 0.35s var(--ease);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+}
+
+/* ---------- animation ---------- */
 @keyframes ellipsis-blink {
   0%, 100% { opacity: 0.2; }
   50% { opacity: 1; }
@@ -107,6 +214,17 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-stopped { overflow: hidden; }
 
+/* scrollbar, warm */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--sand); }
+::-webkit-scrollbar-thumb {
+  background: var(--clay);
+  border: 2px solid var(--sand);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--umber); }
+
 @media (prefers-reduced-motion: reduce) {
   .dot { animation: none; opacity: 0.7; }
+  * { scroll-behavior: auto !important; }
 }

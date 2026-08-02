@@ -76,7 +76,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
   }
 
   const field =
-    "peer w-full bg-transparent border-0 border-b border-white/25 px-0 py-3 text-[1rem] font-normal text-platinum placeholder:text-white/35 focus:border-platinum focus:outline-none transition-colors";
+    "peer w-full bg-transparent border-0 border-b border-[var(--rule-strong)] px-0 py-3 text-[1rem] font-normal text-text placeholder:text-text-mute focus:border-espresso focus:outline-none transition-colors";
 
   return (
     <div className="relative w-full max-w-xl">
@@ -94,7 +94,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
               ) : (
                 <>
                   Thank you,{" "}
-                  <em className="italic text-silver">
+                  <em className="italic text-sienna">
                     {title === "MR" ? "Mr" : "Mrs"} {firstName.trim()}
                   </em>
                   .
@@ -131,8 +131,8 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
                   className={[
                     "label-caps !tracking-[0.2em] rounded-[3px] border px-6 py-2.5 transition-all duration-300",
                     active
-                      ? "border-platinum bg-platinum text-black"
-                      : "border-white/25 text-silver hover:border-white/50 hover:text-platinum",
+                      ? "border-espresso bg-espresso text-[var(--text-inv)]"
+                      : "border-[var(--rule-strong)] text-sienna hover:border-espresso hover:text-text",
                   ].join(" ")}
                 >
                   {t === "MR" ? "Mr" : "Mrs"}
@@ -179,7 +179,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
         </div>
 
         {message && (
-          <p className="text-[0.88rem] font-normal text-[#e0968d]" role="alert">
+          <p className="text-[0.88rem] font-normal text-[#9c3b28]" role="alert">
             {message}
           </p>
         )}
@@ -187,7 +187,7 @@ export default function WaitlistForm({ kind = "WAITLIST" }: { kind?: Kind }) {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="group relative mt-1 overflow-hidden rounded-[3px] border border-platinum bg-platinum px-8 py-3.5 text-black transition-all duration-300 hover:bg-transparent hover:text-platinum disabled:cursor-wait disabled:opacity-60"
+          className="btn btn-solid mt-1"
         >
           <span className="label-caps text-current !tracking-[0.24em]">
             {status === "sending"
