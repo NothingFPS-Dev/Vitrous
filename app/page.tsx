@@ -1,9 +1,6 @@
 import Hero from "@/components/Hero";
 import SmoothScroll from "@/components/SmoothScroll";
-import { ShopProvider } from "@/components/shop/ShopProvider";
-import SiteNav from "@/components/shop/SiteNav";
 import ProductGrid from "@/components/shop/ProductGrid";
-import { CartDrawer, ProductDrawer } from "@/components/shop/Drawers";
 import {
   Invitation,
   Origin,
@@ -13,14 +10,14 @@ import {
   SiteFooter,
 } from "@/components/Sections";
 
+// Nav, cart drawers and the chat assistant are mounted in app/layout.tsx
+// via <SiteChrome>, so they persist across every route.
 export default function Home() {
   return (
-    <ShopProvider>
+    <>
       <SmoothScroll />
-      <SiteNav />
       <main>
         <Hero />
-        {/* the shop leads — this is a storefront first now */}
         <ProductGrid />
         <Invitation />
         <Origin />
@@ -29,8 +26,6 @@ export default function Home() {
         <Waitlist />
         <SiteFooter />
       </main>
-      <CartDrawer />
-      <ProductDrawer />
-    </ShopProvider>
+    </>
   );
 }
